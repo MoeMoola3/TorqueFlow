@@ -17,11 +17,6 @@ public class ObdDataController {
         this.service = service;
     }
 
-    @PostMapping("/simulate")
-    public ObdData simulateData() {
-        return service.generateAndSaveData();
-    }
-
     @GetMapping("/all")
     public List<ObdData> getAllData() {
         return service.getAllData();

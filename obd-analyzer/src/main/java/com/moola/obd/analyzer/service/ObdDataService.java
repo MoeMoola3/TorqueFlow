@@ -2,6 +2,7 @@ package com.moola.obd.analyzer.service;
 
 import com.moola.obd.analyzer.model.ObdData;
 import com.moola.obd.analyzer.repository.ObdDataRepository;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -18,7 +19,8 @@ public class ObdDataService {
         this.repository = repository;
     }
 
-    public ObdData generateAndSaveData() {
+    @Scheduled(fixedRate = 5000) // This will run the method every 5 seconds
+    public void generateAndSaveData() {
         ObdData data = new ObdData();
         data.setVin("1HGCM82633A004352");
         data.setSpeed(random.nextDouble() * 120); // km/h
@@ -30,7 +32,8 @@ public class ObdDataService {
         data.setThrottlePosition(random.nextDouble() * 100);
         data.setTimestamp(LocalDateTime.now());
 
-        return repository.save(data);
+        repository.save(data);
+        System.out.println("Generated and saved new OBD data at " + data.getTimestamp());
     }
 
     public List<ObdData> getAllData() {
