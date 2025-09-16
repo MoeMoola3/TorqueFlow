@@ -1,40 +1,33 @@
-# Java
-*.class
-*.jar
-*.war
-*.ear
-*.log
-*.tmp
-*.bak
-*.swp
-
-# Maven
+HELP.md
 target/
-pom.xml.tag
-pom.xml.releaseBackup
-pom.xml.versionsBackup
-pom.xml.next
-release.properties
-dependency-reduced-pom.xml
-buildNumber.properties
-.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
 
-# IntelliJ IDEA
-.idea/
-*.iml
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### IntelliJ IDEA ###
+.idea
 *.iws
-out/
-gen/
+*.iml
 *.ipr
-# OS-specific
-.DS_Store
-Thumbs.db
-ehthumbs.db
-Desktop.ini
 
-# Logs
-logs/
-*.log
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
 
-# Environment files
-.env
+### VS Code ###
+.vscode/
