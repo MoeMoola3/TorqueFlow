@@ -11,8 +11,6 @@ public class ObdData {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String vin;
     private double speed;
     private int rpm;
     private double fuelLevel;
@@ -20,5 +18,9 @@ public class ObdData {
     private int intakeAirTemp;
     private double engineLoad;
     private double throttlePosition;
-    private LocalDateTime timestamp;
+    private LocalDateTime recordTime;
+
+    @ManyToOne
+    @JoinColumn(name = "vin_number", referencedColumnName = "vin")
+    private Vin vin;
 }

@@ -8,7 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/obd")
-@CrossOrigin(origins = "*") // Allow frontend access
+@CrossOrigin(origins = "*")
 public class ObdDataController {
 
     private final ObdDataService service;

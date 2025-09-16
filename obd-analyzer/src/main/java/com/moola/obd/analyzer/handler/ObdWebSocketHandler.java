@@ -10,7 +10,6 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 /**
  * Custom WebSocket handler to manage WebSocket sessions.
- * This handler extends TextWebSocketHandler to handle text messages.
  * It uses the WebSocketSessionManager to start and stop data streams for each session.
  */
 @Component
@@ -32,7 +31,7 @@ public class ObdWebSocketHandler extends TextWebSocketHandler {
      */
     @Override
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
-        sessionManager.getSessions().put(session.getId(), session);
+        sessionManager.storeSession(session.getId(), session);
         sessionManager.startSessionTask(session.getId(), dataSenderService::sendDataToClients);
         session.sendMessage(new TextMessage("Connection established. Waiting for OBD data..."));
     }

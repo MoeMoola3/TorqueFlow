@@ -1,7 +1,9 @@
 package com.moola.obd.analyzer.service;
 
 import com.moola.obd.analyzer.model.ObdData;
+import com.moola.obd.analyzer.model.Vin;
 import com.moola.obd.analyzer.repository.ObdDataRepository;
+import com.moola.obd.analyzer.repository.VinRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -11,32 +13,42 @@ import java.util.Random;
 @Service
 public class ObdDataService {
 
-    private final ObdDataRepository repository;
+    private final ObdDataRepository obdDataRepository;
+    private final VinRepository vinRepository;
     private final Random random = new Random();
 
-    public ObdDataService(ObdDataRepository repository) {
-        this.repository = repository;
+    public ObdDataService(ObdDataRepository obdDataRepository, VinRepository vinRepository) {
+        this.obdDataRepository = obdDataRepository;
+        this.vinRepository = vinRepository;
     }
 
     public ObdData generateAndSaveData() {
+        String vinString = "1HGCM82633A004352";
+
+        Vin vin = vinRepository.findById(vinString).orElseGet(() -> {
+            Vin newVin = new Vin();
+            newVin.setVin(vinString);
+            return vinRepository.save(newVin);
+        });
+
         ObdData data = new ObdData();
-        data.setVin("1HGCM82633A004352");
-        data.setSpeed(random.nextDouble() * 120); // km/h
+        data.setVin(vin);
+        data.setSpeed(random.nextDouble() * 120);
         data.setRpm(random.nextInt(7000));
         data.setFuelLevel(random.nextDouble() * 100);
         data.setCoolantTemp(random.nextInt(120));
         data.setIntakeAirTemp(random.nextInt(100));
         data.setEngineLoad(random.nextDouble() * 100);
         data.setThrottlePosition(random.nextDouble() * 100);
-        data.setTimestamp(LocalDateTime.now());
+        data.setRecordTime(LocalDateTime.now());
 
-        repository.save(data);
-        System.out.println("Generated and saved new OBD data at " + data.getTimestamp());
+        obdDataRepository.save(data);
+        System.out.println("Generated and saved new OBD data for VIN " + vin.getVin() + " at " + data.getRecordTime());
 
         return data;
     }
 
     public List<ObdData> getAllData() {
-        return repository.findAll();
+        return obdDataRepository.findAll();
     }
 }

@@ -1,6 +1,6 @@
 package com.moola.obd.analyzer.service;
 
-import com.moola.obd.analyzer.model.ObdData;
+import lombok.Getter;
 import org.springframework.scheduling.TaskScheduler;
 import org.springframework.stereotype.Service;
 import org.springframework.web.socket.WebSocketSession;
@@ -13,19 +13,14 @@ import java.util.concurrent.ScheduledFuture;
  * Manages the WebSocket sessions and their corresponding scheduled tasks.
  * This service acts as a centralized point for starting and stopping the data generation
  * and sending tasks for each connected client. This design allows both the
- * WebSocket listener and the REST controller to manage sessions using the same
- * logic without code duplication.
+ * WebSocket listener and the REST controller to manage sessions.
  */
 @Service
 public class WebSocketSessionManager {
 
-    /**
-     * A thread-safe map to store a unique scheduled task for each session ID.
-     * The key is the WebSocket session ID, and the value is the ScheduledFuture
-     * that represents the running task.
-     */
     private final TaskScheduler taskScheduler;
     private final ConcurrentHashMap<String, ScheduledFuture<?>> tasks = new ConcurrentHashMap<>();
+    @Getter
     private final ConcurrentHashMap<String, WebSocketSession> sessions = new ConcurrentHashMap<>();
 
 
@@ -67,13 +62,9 @@ public class WebSocketSessionManager {
         }
     }
 
-    /**
-     * Retrieves the map of active WebSocket sessions.
-     *
-     * @return A map containing all active WebSocket sessions.
-     */
-    public ConcurrentHashMap<String, WebSocketSession> getSessions() {
-        return this.sessions;
+
+    public void storeSession(String sessionId, WebSocketSession session) {
+        sessions.put(sessionId, session);
     }
 
 }
