@@ -1,5 +1,3 @@
-# --- Build Stage ---
-# This stage builds the .jar file
 FROM eclipse-temurin:17-jdk-jammy AS builder
 WORKDIR /app
 COPY .mvn/ .mvn
