@@ -40,7 +40,7 @@ public class WebSocketSessionManager {
     public void startSessionTask(String sessionId, Runnable task) {
         ScheduledFuture<?> scheduledTask = taskScheduler.scheduleAtFixedRate(
                 task,
-                Duration.ofSeconds(5)
+                Duration.ofSeconds(1)
         );
         tasks.put(sessionId, scheduledTask);
         System.out.println("WebSocket session " + sessionId + " connected. Task started.");

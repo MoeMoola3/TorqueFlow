@@ -17,8 +17,8 @@ public class ObdDataController {
         this.service = service;
     }
 
-    @GetMapping("/all")
-    public List<ObdData> getAllData() {
-        return service.getAllData();
-    }
+//    @GetMapping("/all")
+//    public List<ObdData> getAllData() {
+//        return service.getAllData();
+//    }
 }
