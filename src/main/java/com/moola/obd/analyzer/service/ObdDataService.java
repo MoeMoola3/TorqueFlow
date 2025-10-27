@@ -1,59 +1,3 @@
-//package com.moola.obd.analyzer.service;
-//
-//import com.moola.obd.analyzer.model.ObdData;
-//import com.moola.obd.analyzer.model.Vin;
-//import com.moola.obd.analyzer.repository.ObdDataRepository;
-//import com.moola.obd.analyzer.repository.VinRepository;
-//import org.springframework.stereotype.Service;
-//
-//import java.time.LocalDateTime;
-//import java.util.List;
-//import java.util.Random;
-//
-//@Service
-//public class ObdDataService {
-//
-//    private final ObdDataRepository obdDataRepository;
-//    private final VinRepository vinRepository;
-//    private final Random random = new Random();
-//
-//    public ObdDataService(ObdDataRepository obdDataRepository, VinRepository vinRepository) {
-//        this.obdDataRepository = obdDataRepository;
-//        this.vinRepository = vinRepository;
-//    }
-//
-//    public ObdData generateAndSaveData() {
-//        String vinString = "1HGCM82633A004352";
-//
-//        Vin vin = vinRepository.findById(vinString).orElseGet(() -> {
-//            Vin newVin = new Vin();
-//            newVin.setVin(vinString);
-//            return vinRepository.save(newVin);
-//        });
-//
-//        ObdData data = new ObdData();
-//        data.setVin(vin);
-//        data.setSpeed(random.nextDouble() * 120);
-//        data.setRpm(random.nextInt(7000));
-//        data.setFuelLevel(random.nextDouble() * 100);
-//        data.setCoolantTemp(random.nextInt(120));
-//        data.setIntakeAirTemp(random.nextInt(100));
-//        data.setEngineLoad(random.nextDouble() * 100);
-//        data.setThrottlePosition(random.nextDouble() * 100);
-//        data.setRecordTime(LocalDateTime.now());
-//
-//        obdDataRepository.save(data);
-//        System.out.println("Generated and saved new OBD data for VIN " + vin.getVin() + " at " + data.getRecordTime());
-//
-//        return data;
-//    }
-//
-//    public List<ObdData> getAllData() {
-//        return obdDataRepository.findAll();
-//    }
-//}
-
-
 package com.moola.obd.analyzer.service;
 
 import com.moola.obd.analyzer.model.EngineMode;
@@ -62,11 +6,14 @@ import com.moola.obd.analyzer.model.Vin;
 import com.moola.obd.analyzer.repository.ObdDataRepository;
 import com.moola.obd.analyzer.repository.VinRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
+import org.springframework.data.domain.Page;
 
 @Service
 public class ObdDataService {
@@ -92,7 +39,7 @@ public class ObdDataService {
     }
 
     /**
-     * **NEW**: Public method to change the engine mode from an external source (e.g., a controller).
+     * Method to change the engine mode from an external source (e.g., a controller).
      * @param mode The new EngineMode to simulate.
      */
     public void setEngineMode(EngineMode mode) {
@@ -106,12 +53,12 @@ public class ObdDataService {
         ObdData initialData = new ObdData();
         initialData.setEngineRpm(750);
         initialData.setSpeed(0);
-        initialData.setCoolantTemp(20); // Ambient temp
+        initialData.setCoolantTemp(20);
         initialData.setThrottlePosition(3);
         initialData.setO2SensorVoltage(0.1);
         initialData.setShortTermFuelTrim(0);
         initialData.setEngineLoad(20);
-        initialData.setFuelLevel(75); // Starting fuel level
+        initialData.setFuelLevel(75);
         return initialData;
     }
 
@@ -123,14 +70,20 @@ public class ObdDataService {
             return vinRepository.save(newVin);
         });
 
-        // The data generated now depends entirely on the 'currentMode' state
+
         ObdData newData = generateDataForCurrentMode(vin);
-        this.lastObdData = newData; // Update the last known state for smooth transitions
+        this.lastObdData = newData;
 
         obdDataRepository.save(newData);
         System.out.println("Generated data for mode: " + currentMode + " | RPM: " + newData.getEngineRpm() + " | Speed: " + String.format("%.2f", newData.getSpeed()));
 
         return newData;
+    }
+
+    public Page<ObdData> getPagedData(int page) {
+        int pageSize = 50;
+        Pageable pageable = PageRequest.of(page, pageSize);
+        return obdDataRepository.findAll(pageable);
     }
 
     private ObdData generateDataForCurrentMode(Vin vin) {

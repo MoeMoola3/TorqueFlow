@@ -4,7 +4,7 @@ import lombok.Data;
 
 /**
  * Represents a structured message received from a WebSocket client.
- * 'type' defines the action (e.g., "modeChange").
+ * 'type' defines the action "modeChange"
  * 'payload' contains the data for that action (e.g., "ACCELERATION").
  */
 @Data
