@@ -8,6 +8,7 @@ import com.moola.obd.analyzer.repository.VinRepository;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -82,7 +83,7 @@ public class ObdDataService {
 
     public Page<ObdData> getPagedData(int page) {
         int pageSize = 50;
-        Pageable pageable = PageRequest.of(page, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize, Sort.by(Sort.Direction.DESC, "recordTime"));
         return obdDataRepository.findAll(pageable);
     }
 
