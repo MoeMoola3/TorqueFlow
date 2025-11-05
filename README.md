@@ -28,7 +28,7 @@ Designed to simulate OBD-II style engine metrics and serve them to the [TorqueFl
 
 ---
 
-## 📡 Live Site
+## 🌐 Live Site
 
 Check the live application here: [TorqueFlow](https://torqueflow.moemoola.com/)
 
@@ -94,16 +94,13 @@ com.moola.obd.analyzer
 
 <img width="1845" height="698" alt="Screenshot 2025-11-05 031835" src="https://github.com/user-attachments/assets/c03afbed-5a94-41e9-b514-4247c70803d5" />
 
-
 ---
 
-## 🌐 API + WebSocket Endpoints
+## 📡 API + WebSocket Endpoints
 
-### 📡 WebSocket
 | Endpoint    | Description                  |
 |-------------|------------------------------|
 | `/ws`       | Live real-time data stream   |
 | `/api/obd`  | Latest 50 records            |
-
 
 ---
