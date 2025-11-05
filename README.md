@@ -1,14 +1,97 @@
-# 🚗 OBD-II WebSocket API
+<p align="center">
+  <img width="430" alt="torqueflow-backend" src="https://github.com/user-attachments/assets/91f40780-ed5d-4fd5-a2c7-da4b581712f8" />
+</p>
 
-**Simulation of real-time Vehicle Diagnostics Streaming with Spring Boot + WebSockets**
+<h1 align="center">🛠️ TorqueFlow Backend</h1>
 
-## 📖 Overview
+<p align="center">
+  <b>Real-Time Automotive Telemetry API | Spring Boot + PostgreSQL + WebSockets + Docker</b>
+</p>
 
-This Java Spring Boot application provides a **simulation of real-time vehicle diagnostics data** using **WebSockets**. Streams telemetry such as:
+<p align="center">
+  <img src="https://img.shields.io/badge/Spring%20Boot-Backend-green?logo=springboot" />
+  <img src="https://img.shields.io/badge/PostgreSQL-Database-blue?logo=postgresql" />
+  <img src="https://img.shields.io/badge/WebSockets-Real--Time-orange?logo=websocket" />
+  <img src="https://img.shields.io/badge/Container-Docker-blue?logo=docker" />
+  <img src="https://img.shields.io/badge/Host-Raspberry%20Pi-red?logo=raspberrypi" />
+  <img src="https://img.shields.io/badge/Proxy-Cloudflare-orange?logo=cloudflare" />
+</p>
 
-- 🔄 **Engine RPM**
-- 🚀 **Speed**
-- 🌡️ **Temperature**
-- ⛽ **Fuel Level**
+---
 
-All data is pushed to connected clients in real-time, making it ideal for dashboards, mobile apps, or monitoring tools.
+## 🧭 Overview
+
+The **TorqueFlow Backend** powers real-time automotive telemetry streaming and data storage.  
+It provides WebSocket live events + REST API logging backed by **Spring Boot**, **PostgreSQL**, and **Docker** — running on a Raspberry Pi with **Cloudflare secure tunnel access**.
+
+Designed to simulate OBD-II style engine metrics and serve them to the [TorqueFlow Frontend](https://github.com/MoeMoola3/TorqueFlow-Frontend).
+
+---
+
+## 🚀 Features
+
+✅ **Real-time WebSocket engine telemetry**  
+✅ **REST API for OBD data logs**  
+✅ **PostgreSQL storage**  
+✅ **Pagination — latest 50 entries default**  
+✅ **Engine modes simulation** (cold start, idle, cruise, acceleration, deceleration, high load)  
+✅ **Docker + Raspberry Pi deployment**  
+✅ **Secure Cloudflare tunneling**  
+✅ **Auto-restarts + persistent DB volume**
+
+---
+
+## 🧩 Architecture
+````
+┌──────────────┐     WebSocket      ┌─────────────┐
+│   Frontend   │ <----------------> │ Spring Boot │
+│  (React UI)  │     Live Telemetry │  Backend    │
+└──────┬───────┘                    └──────┬──────┘
+       │                                   │
+       │    REST API (GET)                 │
+       ▼                                   │
+┌──────────────┐                           │
+│  PostgreSQL  │  <── Persist + Query  ────┘
+└──────────────┘
+
+Raspberry Pi Host + Docker + Cloudflare Secure Tunnel
+
+````
+
+---
+
+## 🧩 File Structure
+
+```
+com.moola.obd.analyzer
+├── config
+|     └── WebSocketConfig
+├── controller
+|      ├── ObdDataController
+|      └── WebSocketObdDataController
+├── handler
+|      └── ObdWebSocketHandler
+├── model
+|      ├── EngineMode
+|      ├── ObdData
+|      ├── Vin
+|      └── WebSocketMessage
+├── repository
+|      ├── ObdDataRepository
+|      └── VinRepository
+├── service
+      └── ObdAnalyzerAppliation
+```
+
+---
+
+## 🌐 API + WebSocket Endpoints
+
+### 📡 WebSocket
+| Endpoint    | Description                  |
+|-------------|------------------------------|
+| `/ws`       | Live real-time data stream   |
+| `/api/obd`  | Latest 50 records            |
+
+
+

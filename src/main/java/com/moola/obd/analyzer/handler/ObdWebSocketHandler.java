@@ -6,6 +6,7 @@ import com.moola.obd.analyzer.model.WebSocketMessage;
 import com.moola.obd.analyzer.service.DataSenderService;
 import com.moola.obd.analyzer.service.ObdDataService;
 import com.moola.obd.analyzer.service.WebSocketSessionManager;
+import jakarta.annotation.PreDestroy;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
@@ -20,6 +21,11 @@ public class ObdWebSocketHandler extends TextWebSocketHandler {
     private final ObdDataService obdDataService;
     private final ObjectMapper objectMapper = new ObjectMapper();
 
+    private static volatile int activeClients = 0;
+    private volatile boolean simRunning = false;
+    private Thread mockThread;
+
+
     public ObdWebSocketHandler(WebSocketSessionManager sessionManager, DataSenderService dataSenderService, ObdDataService obdDataService) {
         this.sessionManager = sessionManager;
         this.dataSenderService = dataSenderService;
@@ -30,8 +36,25 @@ public class ObdWebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionEstablished(WebSocketSession session) throws Exception {
         String sessionId = session.getId();
         sessionManager.storeSession(sessionId, session);
-        // The task to be run is the sendDataToClients method
-        sessionManager.startSessionTask(sessionId, dataSenderService::sendDataToClients);
+        activeClients++;
+
+        System.out.println("Client connected: " + sessionId + " | Active clients: " + activeClients);
+
+        if (!simRunning) {
+            simRunning = true;
+
+            mockThread = new Thread(() -> {
+                System.out.println("Starting OBD data stream...");
+                while (simRunning && activeClients > 0) {
+                    dataSenderService.sendDataToClients();
+                    try { Thread.sleep(1000); } catch (InterruptedException ignored) {}
+                }
+                System.out.println("Stopped OBD data stream");
+            });
+
+            mockThread.start();
+        }
+
         session.sendMessage(new TextMessage("Connection established. Waiting for OBD data..."));
     }
 
@@ -62,5 +85,26 @@ public class ObdWebSocketHandler extends TextWebSocketHandler {
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         sessionManager.stopSessionTask(session.getId());
+        activeClients--;
+
+        System.out.println("Client disconnected: " + session.getId() + " | Active clients: " + activeClients);
+
+        if (activeClients <= 0) {
+            simRunning = false;
+            if (mockThread != null && mockThread.isAlive()) {
+                mockThread.interrupt();
+            }
+        }
     }
+
+    @PreDestroy
+    public void shutdown() {
+        simRunning = false;
+        if (mockThread != null && mockThread.isAlive()) {
+            mockThread.interrupt();
+        }
+        System.out.println("OBD WebSocket handler cleaned up on shutdown");
+    }
+
+
 }
