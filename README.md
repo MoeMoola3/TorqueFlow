@@ -60,7 +60,7 @@ Raspberry Pi Host + Docker + Cloudflare Secure Tunnel
 
 ---
 
-## 🧩 File Structure
+## 🗂 File Structure
 
 ```
 com.moola.obd.analyzer
@@ -82,6 +82,12 @@ com.moola.obd.analyzer
 ├── service
       └── ObdAnalyzerAppliation
 ```
+---
+
+## 🧾 Log Screenshot
+
+<img width="1845" height="698" alt="Screenshot 2025-11-05 031835" src="https://github.com/user-attachments/assets/c03afbed-5a94-41e9-b514-4247c70803d5" />
+
 
 ---
 
@@ -94,4 +100,4 @@ com.moola.obd.analyzer
 | `/api/obd`  | Latest 50 records            |
 
 
-
+---
