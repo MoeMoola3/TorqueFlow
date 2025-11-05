@@ -19,9 +19,10 @@
 
 ---
 
-## 🧭 Overview
+## 🔎 Overview
 
-The **TorqueFlow Backend** powers real-time automotive telemetry streaming and data storage.  
+The **TorqueFlow Backend** powers real-time automotive telemetry streaming and data storage.
+
 It provides WebSocket live events + REST API logging backed by **Spring Boot**, **PostgreSQL**, and **Docker** — running on a Raspberry Pi with **Cloudflare secure tunnel access**.
 
 Designed to simulate OBD-II style engine metrics and serve them to the [TorqueFlow Frontend](https://github.com/MoeMoola3/TorqueFlow-Frontend).
